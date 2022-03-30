@@ -1,12 +1,12 @@
-const CracoAlias = require("craco-alias");
+const CracoAlias = require('craco-alias');
 
 module.exports = {
   plugins: [
     {
       plugin: CracoAlias,
       options: {
-        source: "jsconfig",
-        jsConfigPath: "jsconfig.json",
+        source: 'jsconfig',
+        jsConfigPath: 'jsconfig.json',
       },
     },
   ],

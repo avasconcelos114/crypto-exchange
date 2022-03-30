@@ -4,7 +4,7 @@
     "paths": {
       "~api/*": ["./api/*"],
       "~components/*": ["./components/*"],
-      "~utils/*": ["./utils/*"],
+      "~lib/*": ["./lib/*"],
     }
   },
   "exclude": ["node_modules"]
