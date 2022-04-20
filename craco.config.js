@@ -1,5 +1,12 @@
 const CracoAlias = require('craco-alias');
 
+const emotionPresetOptions = {};
+
+const emotionBabelPreset = require('@emotion/babel-preset-css-prop').default(
+  undefined,
+  emotionPresetOptions,
+);
+
 module.exports = {
   plugins: [
     {
@@ -10,4 +17,7 @@ module.exports = {
       },
     },
   ],
+  babel: {
+    plugins: [...emotionBabelPreset.plugins],
+  },
 };

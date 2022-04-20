@@ -1,5 +1,0 @@
-- [ ] Dev Env Setup
-- [ ] API integration
-  - [ ] Add retry logic with fallback
-- [ ] Button & Input component creation
-- [ ] Implement credit card validation
