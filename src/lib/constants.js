@@ -1,1 +1,1 @@
-export const API_BASE_URL = 'https://sumup-op-hiring-test.s3.eu-west-1.amazonaws.com';
+export const WEBSOCKET_PING_INTERVAL = 1000;
