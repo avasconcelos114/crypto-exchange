@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useQuery } from 'react-query';
 
 import { selectPair } from '~store/pair';
-import { API_REFETCH_INTERVAL } from '~lib/constants';
+import { setPrice, selectExchangePrice } from '~store/exchanges';
+import { API_REFETCH_INTERVAL, EXCHANGES } from '~lib/constants';
 import api from '~api/index';
 
 import { mapValuesFromKraken } from '~lib/utils';
@@ -11,9 +12,11 @@ import { mapValuesFromKraken } from '~lib/utils';
 import Card from '~components/common/Card';
 
 function KrakenCard() {
+  const dispatch = useDispatch();
   const pair = useSelector(selectPair);
+  const price = useSelector(selectExchangePrice(EXCHANGES.KRAKEN));
   const formattedPair = pair.replace('/', '').toUpperCase();
-  const [price, setPrice] = useState(null);
+
   const {
     error,
     data: response,
@@ -34,9 +37,11 @@ function KrakenCard() {
       const { result } = response?.data;
       for (const key of Object.keys(result)) {
         const pairData = mapValuesFromKraken(result[key]);
-        setPrice(pairData?.ask || null);
+        dispatch(setPrice({ exchange: EXCHANGES.KRAKEN, price: pairData?.ask || null }));
       }
+      return;
     }
+    dispatch(setPrice({ exchange: EXCHANGES.KRAKEN, price: null }));
   }, [response]);
 
   if (error || !price) {

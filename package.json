@@ -36,6 +36,9 @@
       "react-app/jest",
       "plugin:prettier/recommended"
     ],
+    "rules": {
+      "react-hooks/exhaustive-deps": 0
+    },
     "settings": {
       "import/resolver": {
         "alias": {

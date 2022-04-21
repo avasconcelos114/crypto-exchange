@@ -56,19 +56,3 @@ export function mapValuesFromBitfinex(values) {
     low,
   };
 }
-
-export function mapValuesFromBinance(values) {
-  const {
-    a: ask,
-    A: askSize,
-    b: bid,
-    B: bidSize,
-    c: lastPrice,
-    p: dailyChange,
-    h: high,
-    l: low,
-    v: volume,
-  } = values;
-
-  return { ask, askSize, bid, bidSize, dailyChange, lastPrice, volume, high, low };
-}
