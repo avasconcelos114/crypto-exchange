@@ -1,9 +1,17 @@
 import axios from 'axios';
 
+import { formatUpper } from '~lib/utils';
+
 export async function getTicker(symbol) {
-  return axios.get(`/v2/ticker/t${symbol}`);
+  const formattedSymbol = formatUpper(symbol);
+  return axios.get(`/v2/ticker/t${formattedSymbol}`);
 }
 
 export async function getRecentTrades(symbol) {
-  return axios.get(`/v2/trades/t${symbol}/hist`);
+  const formattedSymbol = formatUpper(symbol);
+  return axios.get(`/v2/trades/t${formattedSymbol}/hist`, {
+    params: {
+      limit: 10,
+    },
+  });
 }

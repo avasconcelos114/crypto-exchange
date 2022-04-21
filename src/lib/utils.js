@@ -56,3 +56,11 @@ export function mapValuesFromBitfinex(values) {
     low,
   };
 }
+
+export function formatUpper(symbol) {
+  return symbol.replace('/', '').toUpperCase();
+}
+
+export function formatLower(symbol) {
+  return symbol.replace('/', '').toLowerCase();
+}

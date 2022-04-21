@@ -24,7 +24,7 @@ const initialState = {
       price: null,
     },
   },
-  order: SORT_TYPES.PRICE,
+  order: SORT_TYPES.ALPHABETIC,
 };
 
 export const exchangesSlice = createSlice({

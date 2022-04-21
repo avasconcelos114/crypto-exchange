@@ -2,26 +2,25 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useQuery } from 'react-query';
 
-import { API_REFETCH_INTERVAL, EXCHANGES } from '~lib/constants';
-import { selectPair } from '~store/pair';
-import { setPrice, selectExchangePrice } from '~store/exchanges';
 import api from '~api/index';
-
+import { API_REFETCH_INTERVAL, EXCHANGES } from '~lib/constants';
 import { mapValuesFromBitfinex } from '~lib/utils';
+import { setPrice, selectExchangePrice } from '~store/exchanges';
+import { selectPair } from '~store/pair';
 
 import Card from '~components/common/Card';
 
-function BitfinexCard() {
+function BitfinexCard(props) {
+  const { onClick } = props;
   const dispatch = useDispatch();
   const pair = useSelector(selectPair);
-  const formattedPair = pair.replace('/', '').toUpperCase();
   const price = useSelector(selectExchangePrice(EXCHANGES.BITFINEX));
   const {
     error,
     data: response,
     refetch,
-  } = useQuery('getPairFromBitfinex', () => api.bitfinex.getTicker(formattedPair), {
-    enabled: Boolean(formattedPair && formattedPair.length > 0),
+  } = useQuery('getPairFromBitfinex', () => api.bitfinex.getTicker(pair), {
+    enabled: Boolean(pair && pair.length > 0),
     refetchInterval: API_REFETCH_INTERVAL,
   });
 
@@ -45,7 +44,7 @@ function BitfinexCard() {
   if (error || !price) {
     return <p>Could not find Bitfinex data</p>;
   }
-  return <Card exchangeName="Bitfinex" price={price} />;
+  return <Card exchange={EXCHANGES.BITFINEX} price={price} onClick={onClick} />;
 }
 
 export default BitfinexCard;

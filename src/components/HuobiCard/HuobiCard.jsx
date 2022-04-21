@@ -2,24 +2,26 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useQuery } from 'react-query';
 
+import api from '~api/index';
 import { API_REFETCH_INTERVAL, EXCHANGES } from '~lib/constants';
+
 import { selectPair } from '~store/pair';
 import { selectExchangePrice, setPrice } from '~store/exchanges';
-import api from '~api/index';
 
 import Card from '~components/common/Card';
 
-function HuobiCard() {
+function HuobiCard(props) {
+  const { onClick } = props;
   const dispatch = useDispatch();
   const pair = useSelector(selectPair);
   const price = useSelector(selectExchangePrice(EXCHANGES.HUOBI));
-  const formattedPair = pair.replace('/', '').toLowerCase();
+
   const {
     error,
     data: response,
     refetch,
-  } = useQuery('getPairFromHuobi', () => api.huobi.getTicker(formattedPair), {
-    enabled: Boolean(formattedPair && formattedPair.length > 0),
+  } = useQuery('getPairFromHuobi', () => api.huobi.getTicker(pair), {
+    enabled: Boolean(pair && pair.length > 0),
     refetchInterval: API_REFETCH_INTERVAL,
   });
 
@@ -47,7 +49,7 @@ function HuobiCard() {
   if (error || !price) {
     return <p>Could not find Huobi data</p>;
   }
-  return <Card exchangeName="Huobi" price={price} />;
+  return <Card exchange={EXCHANGES.HUOBI} price={price} onClick={onClick} />;
 }
 
 export default HuobiCard;

@@ -5,12 +5,14 @@ import { useRouteMatch, useHistory } from 'react-router-dom';
 import { EXCHANGES, SORT_TYPES } from '~lib/constants';
 import { selectPair, setPair } from '~store/pair';
 import { resetPrices, selectOrder, selectExchanges, setOrder } from '~store/exchanges';
+import { openModal } from '~store/modal';
 
 import Input from '~components/common/Input';
 import BinanceCard from '~components/BinanceCard';
 import BitfinexCard from '~components/BitfinexCard';
 import HuobiCard from '~components/HuobiCard';
 import KrakenCard from '~components/KrakenCard';
+import DetailModal from '~components/DetailModal';
 
 function App() {
   const dispatch = useDispatch();
@@ -21,7 +23,7 @@ function App() {
   const [searchValue, setSearchValue] = useState('');
   const history = useHistory();
   const pairMatch = useRouteMatch('/:pairFirst/:pairSecond');
-  // const detailMatch = useMatch('/:pairFirst/:pairSecond/details');
+  const detailMatch = useRouteMatch('/:pairFirst/:pairSecond/:exchange/details');
 
   useEffect(() => {
     if (pairMatch) {
@@ -31,6 +33,17 @@ function App() {
       dispatch(setPair(`${pairFirst}/${pairSecond}`));
     }
   }, [pairMatch]);
+
+  useEffect(() => {
+    if (detailMatch) {
+      const {
+        params: { pairFirst, pairSecond, exchange },
+      } = detailMatch;
+      const newPair = `${pairFirst}/${pairSecond}`;
+      dispatch(setPair(newPair));
+      dispatch(openModal({ exchange, pair: newPair }));
+    }
+  }, [detailMatch]);
 
   useEffect(() => {
     dispatch(resetPrices());
@@ -51,12 +64,16 @@ function App() {
     dispatch(setOrder(e.target.value));
   }
 
+  function handleOpenModal(exchange) {
+    history.push(`/${pair}/${exchange}/details`);
+  }
+
   function generateCards() {
     const cardMap = {
-      [EXCHANGES.BINANCE]: <BinanceCard />,
-      [EXCHANGES.BITFINEX]: <BitfinexCard />,
-      [EXCHANGES.HUOBI]: <HuobiCard />,
-      [EXCHANGES.KRAKEN]: <KrakenCard />,
+      [EXCHANGES.BINANCE]: <BinanceCard onClick={handleOpenModal} />,
+      [EXCHANGES.BITFINEX]: <BitfinexCard onClick={handleOpenModal} />,
+      [EXCHANGES.HUOBI]: <HuobiCard onClick={handleOpenModal} />,
+      [EXCHANGES.KRAKEN]: <KrakenCard onClick={handleOpenModal} />,
     };
 
     if (order === SORT_TYPES.ALPHABETIC) {
@@ -99,6 +116,8 @@ function App() {
         ))}
       </select>
       {generateCards()}
+
+      <DetailModal />
     </div>
   );
 }
