@@ -1,1 +1,1 @@
-export const WEBSOCKET_PING_INTERVAL = 1000;
+export const API_REFETCH_INTERVAL = 1000;

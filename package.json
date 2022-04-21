@@ -14,8 +14,9 @@
     "fflate": "^0.7.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-query": "^3.35.0",
     "react-redux": "^8.0.0",
-    "react-router-dom": "^6.3.0",
+    "react-router-dom": "^5.3.1",
     "react-scripts": "5.0.0",
     "web-vitals": "^2.1.4"
   },
@@ -52,10 +53,6 @@
               "./src/lib/*"
             ],
             [
-              "~hooks/*",
-              "./src/hooks/*"
-            ],
-            [
               "~store/*",
               "./src/store/*"
             ]
@@ -88,6 +85,7 @@
     "eslint-import-resolver-alias": "^1.1.2",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-prettier": "^4.0.0",
+    "http-proxy-middleware": "^2.0.6",
     "prettier": "^2.5.1"
   }
 }
