@@ -5,12 +5,12 @@ WebSocket: https://docs.kraken.com/websockets/#message-subscribe
 
 ### Huobi
 
-API / Websockets: https://huobiapi.github.io/docs/spot/v1/en/#websocket-market-data
+https://huobiapi.github.io/docs/spot/v1/en
 
 ### Bitfinex
 
-Websockets: https://docs.bitfinex.com/reference#ws-public-ticker
+https://docs.bitfinex.com/reference
 
 ### Binance
 
-Websockets: https://binance-docs.github.io/apidocs/spot/en/#websocket-market-streams
+Websockets: https://binance-docs.github.io/apidocs/spot/en

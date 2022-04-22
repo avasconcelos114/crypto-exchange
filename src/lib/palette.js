@@ -29,7 +29,7 @@ const card = {
 };
 
 const modal = {
-  backgroundColor: colors.white,
+  backgroundColor: colors.gray100,
 };
 
 const palette = {

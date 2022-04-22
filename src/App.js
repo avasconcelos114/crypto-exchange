@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouteMatch, useHistory, useLocation } from 'react-router-dom';
 import { Global } from '@emotion/react';
@@ -34,12 +34,15 @@ function App() {
       const {
         params: { pairFirst, pairSecond },
       } = pairMatch;
-      dispatch(setPair(`${pairFirst}/${pairSecond}`));
+      const newPair = `${pairFirst}/${pairSecond}`;
+      if (newPair !== pair) {
+        dispatch(setPair(newPair));
+      }
     }
   }, [pairMatch]);
 
   useEffect(() => {
-    if (detailMatch?.isExact) {
+    if (detailMatch && !isModalOpen) {
       const {
         params: { pairFirst, pairSecond, exchange },
       } = detailMatch;
@@ -120,7 +123,11 @@ function App() {
       <Select onChange={handleSelectSort} />
       {generateCards()}
 
-      {isModalOpen && <DetailModal />}
+      {isModalOpen && (
+        <Suspense fallback="">
+          <DetailModal />
+        </Suspense>
+      )}
     </>
   );
 }

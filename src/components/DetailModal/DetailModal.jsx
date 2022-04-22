@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import Modal from 'react-modal';
@@ -8,6 +8,8 @@ import { selectTradeData, selectActiveExchange, setClose } from '~store/modal';
 import { selectPair } from '~store/pair';
 
 import ExchangeHeader from '~components/common/ExchangeHeader';
+import TradeHeader from '~components/common/TradeHeader';
+import TradeEntry from '~components/common/TradeEntry';
 
 Modal.setAppElement('#root');
 
@@ -47,14 +49,13 @@ function DetailModal() {
   }
 
   return (
-    <Suspense>
-      <Modal isOpen={true} onRequestClose={handleCloseModal} style={styleOverrides}>
-        <ExchangeHeader code={code} displayName={displayName} />
-        {data &&
-          data.length > 0 &&
-          data.map(item => <p key={item.timestamp}>price: {item.price}</p>)}
-      </Modal>
-    </Suspense>
+    <Modal isOpen={true} onRequestClose={handleCloseModal} style={styleOverrides}>
+      <ExchangeHeader code={code} displayName={displayName} />
+      <TradeHeader />
+      {data &&
+        data.length > 0 &&
+        React.Children.toArray(data.map(item => <TradeEntry data={item} />))}
+    </Modal>
   );
 }
 

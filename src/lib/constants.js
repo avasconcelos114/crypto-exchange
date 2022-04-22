@@ -1,4 +1,4 @@
-export const API_REFETCH_INTERVAL = 3000;
+export const API_REFETCH_INTERVAL = 1500;
 
 export const EXCHANGES = {
   BINANCE: 'binance',

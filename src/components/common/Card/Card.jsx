@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import * as styles from './Card.styles';
 
 import ExchangeHeader from '~components/common/ExchangeHeader';
@@ -7,7 +6,7 @@ function Card(props) {
   const { data } = props;
   const { code, displayName, price } = data;
 
-  const priceElement = useMemo(() => {
+  function generatePriceElement() {
     if (price && Boolean(price)) {
       return (
         <div css={styles.priceWrapperStyle}>
@@ -16,13 +15,14 @@ function Card(props) {
       );
     }
 
-    return <p>No price found :(</p>;
-  }, [price]);
+    // We could also just exclude these from being displayed by returning null
+    return <p>Unsupported trading pair :(</p>;
+  }
 
   return (
     <div css={styles.baseStyle}>
       <ExchangeHeader code={code} displayName={displayName} />
-      {priceElement}
+      {generatePriceElement()}
     </div>
   );
 }

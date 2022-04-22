@@ -27,7 +27,7 @@ export const { actions, reducer, name } = createSlice({
       state.loadingState = action.payload;
     },
     setData: (state, action) => {
-      state.data = action.payload;
+      state.data = Object.assign([], action.payload);
     },
   },
 });
@@ -50,38 +50,41 @@ export const openModal = createAsyncThunk(`${name}/openModal`, async (params, th
 
   try {
     const { data: response } = await api[exchange].getRecentTrades(pair);
-    let data = [];
+    let tradeData = [];
     switch (exchange) {
       case EXCHANGES.BINANCE:
-        data = response.map(item => {
-          const { time: timestamp, qty: amount, price } = item;
-          return { timestamp, amount, price };
-        });
+        tradeData = response
+          .map(item => {
+            const { time: timestamp, qty: amount, price } = item;
+            return { timestamp, amount, price };
+          })
+          .reverse();
         break;
       case EXCHANGES.BITFINEX:
-        data = response.map(item => {
+        tradeData = response.map(item => {
           const [_, timestamp, amount, price] = item;
           return { timestamp, amount, price };
         });
         break;
       case EXCHANGES.HUOBI:
-        data = response?.data.map(item => {
+        tradeData = response?.data.map(item => {
           const { ts: timestamp, amount, price } = item.data[0];
           return { timestamp, amount, price };
         });
         break;
       case EXCHANGES.KRAKEN:
         const key = Object.keys(response.result)[0];
-        data = response.result[key]
+        tradeData = response.result[key]
           ?.map(item => {
             const [price, amount, timestamp] = item;
             return { timestamp, amount, price };
           })
-          .slice(0, 10);
+          .slice(0, 20)
+          .reverse();
         break;
       default:
     }
-    dispatch(setData(data));
+    dispatch(setData(tradeData));
     dispatch(setLoading(LOADING_STATE.SUCCESS));
   } catch (e) {
     dispatch(setLoading(LOADING_STATE.ERROR));

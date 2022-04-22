@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
@@ -15,15 +15,14 @@ function ExchangeCard(props) {
   const dispatch = useDispatch();
   const pair = useSelector(selectPair);
   const exchangeData = useSelector(selectExchangeData(exchange));
-
-  const { data: response, refetch } = useQuery(
-    `api/getTicker/${exchange}`,
-    () => api[exchange].getTicker(pair),
-    {
-      enabled: Boolean(pair && pair.length > 0),
-      refetchInterval: API_REFETCH_INTERVAL,
-    },
-  );
+  const {
+    data: response,
+    refetch,
+    error,
+  } = useQuery(`api/getTicker/${exchange}`, () => api[exchange].getTicker(pair), {
+    enabled: Boolean(pair && pair.length > 0),
+    refetchInterval: API_REFETCH_INTERVAL,
+  });
 
   useEffect(() => {
     if (pair) {
@@ -39,7 +38,8 @@ function ExchangeCard(props) {
         price = response?.data?.price || null;
         break;
       case EXCHANGES.BITFINEX:
-        price = Array.isArray(response?.data) ? mapValuesFromBitfinex(response.data).ask : null;
+        const data = response?.data;
+        price = data[0] !== 'error' ? mapValuesFromBitfinex(response?.data)?.ask : null;
         break;
       case EXCHANGES.HUOBI:
         if (response?.data?.tick) {
@@ -53,13 +53,17 @@ function ExchangeCard(props) {
         }
         break;
       case EXCHANGES.KRAKEN:
-        const { result } = response?.data;
+        const { result = {} } = response?.data;
         for (const key of Object.keys(result)) {
           const pairData = mapValuesFromKraken(result[key]);
           price = pairData?.ask || null;
         }
         break;
       default:
+    }
+
+    if (error) {
+      price = null;
     }
     dispatch(setPrice({ exchange, price }));
   }
