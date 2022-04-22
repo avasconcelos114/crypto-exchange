@@ -11,6 +11,7 @@ import { openModal, selectIsOpen } from '~store/modal';
 import Input from '~components/common/Input';
 import Select from '~components/common/Select';
 import ExchangeCard from '~components/ExchangeCard';
+import Empty from '~components/Empty';
 
 import globalStyles from './App.styles';
 
