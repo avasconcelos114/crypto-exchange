@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useQuery } from 'react-query';
-
+import { Link } from 'react-router-dom';
 import api from '~api/index';
 import { API_REFETCH_INTERVAL, EXCHANGES } from '~lib/constants';
 import { mapValuesFromKraken, mapValuesFromBitfinex } from '~lib/utils';
@@ -11,7 +11,7 @@ import { selectPair } from '~store/pair';
 import Card from '~components/common/Card';
 
 function ExchangeCard(props) {
-  const { onClick, exchange } = props;
+  const { exchange } = props;
   const dispatch = useDispatch();
   const pair = useSelector(selectPair);
   const exchangeData = useSelector(selectExchangeData(exchange));
@@ -70,7 +70,19 @@ function ExchangeCard(props) {
     }
   }, [response]);
 
-  return <Card data={exchangeData} onClick={onClick} />;
+  function getDestinationLink() {
+    // Preventing user from opening modal of an exchange that has no data
+    if (exchangeData?.price) {
+      return `/${pair}/${exchange}/details`;
+    }
+    return `/${pair}`;
+  }
+
+  return (
+    <Link style={{ textDecoration: 'none' }} to={getDestinationLink()}>
+      <Card data={exchangeData} />
+    </Link>
+  );
 }
 
 export default ExchangeCard;

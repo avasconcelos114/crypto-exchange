@@ -12,6 +12,7 @@ export const baseStyle = css`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  text-decoration: none;
 
   &:hover {
     background-color: ${palette.card.hover.backgroundColor};

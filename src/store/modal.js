@@ -40,9 +40,12 @@ export const selectTradeData = state => state.modal.data;
 export const { setOpen, setClose, setLoading, setData } = actions;
 
 export const openModal = createAsyncThunk(`${name}/openModal`, async (params, thunkAPI) => {
-  const { dispatch } = thunkAPI;
+  const { dispatch, getState } = thunkAPI;
   const { pair, exchange } = params;
-  dispatch(setOpen(exchange));
+  const {
+    exchanges: { data: exchangeData },
+  } = getState();
+  dispatch(setOpen(exchangeData[exchange]));
   dispatch(setLoading(LOADING_STATE.LOADING));
 
   try {

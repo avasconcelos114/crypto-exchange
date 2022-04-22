@@ -1,13 +1,11 @@
 import { useMemo } from 'react';
 import * as styles from './Card.styles';
 
-function Card(props) {
-  const { data, onClick } = props;
-  const { code, displayName, price } = data;
+import ExchangeHeader from '~components/common/ExchangeHeader';
 
-  function handleClick() {
-    onClick && onClick(code);
-  }
+function Card(props) {
+  const { data } = props;
+  const { code, displayName, price } = data;
 
   const priceElement = useMemo(() => {
     if (price && Boolean(price)) {
@@ -22,11 +20,8 @@ function Card(props) {
   }, [price]);
 
   return (
-    <div css={styles.baseStyle} onClick={handleClick}>
-      <div css={styles.headerWrapperStyle}>
-        <img src={require(`~resources/img/${code}.png`)} alt={`${displayName} exchange logo`} />
-        <h2>{displayName}</h2>
-      </div>
+    <div css={styles.baseStyle}>
+      <ExchangeHeader code={code} displayName={displayName} />
       {priceElement}
     </div>
   );

@@ -6,20 +6,22 @@ import { Global } from '@emotion/react';
 import { EXCHANGES, SORT_TYPES } from '~lib/constants';
 import { selectPair, setPair } from '~store/pair';
 import { resetPrices, selectOrder, selectExchanges, setOrder } from '~store/exchanges';
-import { openModal } from '~store/modal';
+import { openModal, selectIsOpen } from '~store/modal';
 
 import Input from '~components/common/Input';
 import Select from '~components/common/Select';
 import ExchangeCard from '~components/ExchangeCard';
-import DetailModal from '~components/DetailModal';
 
 import globalStyles from './App.styles';
+
+const DetailModal = React.lazy(() => import('~components/DetailModal'));
 
 function App() {
   const dispatch = useDispatch();
   const pair = useSelector(selectPair);
   const order = useSelector(selectOrder);
   const exchanges = useSelector(selectExchanges);
+  const isModalOpen = useSelector(selectIsOpen);
 
   const [searchValue, setSearchValue] = useState('');
   const history = useHistory();
@@ -73,22 +75,16 @@ function App() {
     dispatch(setOrder(e.target.value));
   }
 
-  function handleOpenModal(exchange) {
-    history.push(`/${pair}/${exchange}/details`);
-  }
-
   function generateCards() {
     if (!pair) {
       return <p>Input a valid pair to begin your search!</p>;
     }
 
     const cardMap = {
-      [EXCHANGES.BINANCE]: <ExchangeCard exchange={EXCHANGES.BINANCE} onClick={handleOpenModal} />,
-      [EXCHANGES.BITFINEX]: (
-        <ExchangeCard exchange={EXCHANGES.BITFINEX} onClick={handleOpenModal} />
-      ),
-      [EXCHANGES.HUOBI]: <ExchangeCard exchange={EXCHANGES.HUOBI} onClick={handleOpenModal} />,
-      [EXCHANGES.KRAKEN]: <ExchangeCard exchange={EXCHANGES.KRAKEN} onClick={handleOpenModal} />,
+      [EXCHANGES.BINANCE]: <ExchangeCard exchange={EXCHANGES.BINANCE} />,
+      [EXCHANGES.BITFINEX]: <ExchangeCard exchange={EXCHANGES.BITFINEX} />,
+      [EXCHANGES.HUOBI]: <ExchangeCard exchange={EXCHANGES.HUOBI} />,
+      [EXCHANGES.KRAKEN]: <ExchangeCard exchange={EXCHANGES.KRAKEN} />,
     };
 
     if (order === SORT_TYPES.ALPHABETIC) {
@@ -124,7 +120,7 @@ function App() {
       <Select onChange={handleSelectSort} />
       {generateCards()}
 
-      <DetailModal />
+      {isModalOpen && <DetailModal />}
     </>
   );
 }

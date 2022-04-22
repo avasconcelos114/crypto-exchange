@@ -28,10 +28,15 @@ const card = {
   },
 };
 
+const modal = {
+  backgroundColor: colors.white,
+};
+
 const palette = {
   colors,
   card,
   input,
+  modal,
 };
 
 export default palette;
