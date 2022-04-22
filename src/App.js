@@ -81,7 +81,7 @@ function App() {
 
   function generateCards() {
     if (!pair) {
-      return <p>Input a valid pair to begin your search!</p>;
+      return <Empty />;
     }
 
     const cardMap = {
