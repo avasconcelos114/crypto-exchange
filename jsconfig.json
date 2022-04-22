@@ -5,6 +5,7 @@
       "~api/*": ["./src/api/*"],
       "~components/*": ["./src/components/*"],
       "~lib/*": ["./src/lib/*"],
+      "~resources/*": ["./src/resources/*"],
       "~store/*": ["./src/store/*"]
     }
   },

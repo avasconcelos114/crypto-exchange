@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useRouteMatch, useHistory } from 'react-router-dom';
+import { useRouteMatch, useHistory, useLocation } from 'react-router-dom';
+import { Global } from '@emotion/react';
 
 import { EXCHANGES, SORT_TYPES } from '~lib/constants';
 import { selectPair, setPair } from '~store/pair';
@@ -8,11 +9,11 @@ import { resetPrices, selectOrder, selectExchanges, setOrder } from '~store/exch
 import { openModal } from '~store/modal';
 
 import Input from '~components/common/Input';
-import BinanceCard from '~components/BinanceCard';
-import BitfinexCard from '~components/BitfinexCard';
-import HuobiCard from '~components/HuobiCard';
-import KrakenCard from '~components/KrakenCard';
+import Select from '~components/common/Select';
+import ExchangeCard from '~components/ExchangeCard';
 import DetailModal from '~components/DetailModal';
+
+import globalStyles from './App.styles';
 
 function App() {
   const dispatch = useDispatch();
@@ -22,11 +23,12 @@ function App() {
 
   const [searchValue, setSearchValue] = useState('');
   const history = useHistory();
+  const location = useLocation();
   const pairMatch = useRouteMatch('/:pairFirst/:pairSecond');
   const detailMatch = useRouteMatch('/:pairFirst/:pairSecond/:exchange/details');
 
   useEffect(() => {
-    if (pairMatch) {
+    if (pairMatch?.isExact) {
       const {
         params: { pairFirst, pairSecond },
       } = pairMatch;
@@ -35,7 +37,7 @@ function App() {
   }, [pairMatch]);
 
   useEffect(() => {
-    if (detailMatch) {
+    if (detailMatch?.isExact) {
       const {
         params: { pairFirst, pairSecond, exchange },
       } = detailMatch;
@@ -51,6 +53,13 @@ function App() {
       setSearchValue(pair);
     }
   }, [pair]);
+
+  useEffect(() => {
+    if (location.pathname === '/') {
+      dispatch(setPair(null));
+      dispatch(resetPrices());
+    }
+  }, [location.pathname]);
 
   function handleChange(e) {
     setSearchValue(e.target.value);
@@ -69,11 +78,17 @@ function App() {
   }
 
   function generateCards() {
+    if (!pair) {
+      return <p>Input a valid pair to begin your search!</p>;
+    }
+
     const cardMap = {
-      [EXCHANGES.BINANCE]: <BinanceCard onClick={handleOpenModal} />,
-      [EXCHANGES.BITFINEX]: <BitfinexCard onClick={handleOpenModal} />,
-      [EXCHANGES.HUOBI]: <HuobiCard onClick={handleOpenModal} />,
-      [EXCHANGES.KRAKEN]: <KrakenCard onClick={handleOpenModal} />,
+      [EXCHANGES.BINANCE]: <ExchangeCard exchange={EXCHANGES.BINANCE} onClick={handleOpenModal} />,
+      [EXCHANGES.BITFINEX]: (
+        <ExchangeCard exchange={EXCHANGES.BITFINEX} onClick={handleOpenModal} />
+      ),
+      [EXCHANGES.HUOBI]: <ExchangeCard exchange={EXCHANGES.HUOBI} onClick={handleOpenModal} />,
+      [EXCHANGES.KRAKEN]: <ExchangeCard exchange={EXCHANGES.KRAKEN} onClick={handleOpenModal} />,
     };
 
     if (order === SORT_TYPES.ALPHABETIC) {
@@ -103,22 +118,14 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <Input handleChange={handleChange} value={searchValue} />
-      <button type="button" onClick={handleSubmit}>
-        GO
-      </button>
-      <select onChange={handleSelectSort}>
-        {Object.keys(SORT_TYPES).map(type => (
-          <option key={type} value={SORT_TYPES[type]}>
-            {type}
-          </option>
-        ))}
-      </select>
+    <>
+      <Global styles={globalStyles} />
+      <Input onChange={handleChange} onSubmit={handleSubmit} value={searchValue} />
+      <Select onChange={handleSelectSort} />
       {generateCards()}
 
       <DetailModal />
-    </div>
+    </>
   );
 }
 

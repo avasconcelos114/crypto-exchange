@@ -4,23 +4,23 @@ import { EXCHANGES, SORT_TYPES } from '~lib/constants';
 const initialState = {
   data: {
     [EXCHANGES.BINANCE]: {
+      code: EXCHANGES.BINANCE,
       displayName: 'Binance',
-      icon: '',
       price: null,
     },
     [EXCHANGES.BITFINEX]: {
+      code: EXCHANGES.BITFINEX,
       displayName: 'Bitfinex',
-      icon: '',
       price: null,
     },
     [EXCHANGES.KRAKEN]: {
+      code: EXCHANGES.KRAKEN,
       displayName: 'Kraken',
-      icon: '',
       price: null,
     },
     [EXCHANGES.HUOBI]: {
+      code: EXCHANGES.HUOBI,
       displayName: 'Huobi',
-      icon: '',
       price: null,
     },
   },
@@ -47,7 +47,7 @@ export const exchangesSlice = createSlice({
 });
 
 export const selectExchanges = state => state.exchanges.data;
-export const selectExchangePrice = exchange => state => state.exchanges.data[exchange].price;
+export const selectExchangeData = exchange => state => state.exchanges.data[exchange];
 export const selectOrder = state => state.exchanges.order;
 
 export const { setPrice, resetPrices, setOrder } = exchangesSlice.actions;
