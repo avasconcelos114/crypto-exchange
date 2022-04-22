@@ -24,3 +24,21 @@ The process I think is most ideal would:
 2. show suggestions for valid choices as the user types on the input
 3. Trigger the `history.push()` event only by the user clicking on a value already established as
    valid by the server
+
+## Route Changes
+
+While the original requirements needed the `http://url.com/{cryptocurrency_pair}/details` URL to
+open a modal with latest trade history, we needed a way to know which exchange's data needed to be
+shown on screen. As a result I had to change the path parameters to
+`/{cryptocurrency_pair}/{exchange}/details`
+
+## CORS Issues
+
+Bitfinex seems to want us to only connect to their API from another server, and has a
+`Access-Control-Allow-Origin` header set up which prevented us from accessing it normally from a
+browser. This required me to set up a local proxy on setupProxy.js so that local development would
+not be hindered.
+
+Ideally we would have a node servers that takes in requests for a given trading pair / exchange, and
+returns data in a uniform format so that we would not require as much business logic to parse
+through responses.
