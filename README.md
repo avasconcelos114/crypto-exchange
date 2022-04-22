@@ -18,7 +18,7 @@ However due to time constraints I had to opt not to use it for this code task
 #### Validation
 
 A process that validates whether each pair (`BTC/USD`, etc) is acceptable is sorely needed, as in
-its current iteration the app will crash if you type a completely invalid pair (`aoedjae/oeaaef`)
+its current iteration still accepts a completely invalid pair (`aoedjae/oeaaef`)
 
 The process I think is most ideal would:
 
