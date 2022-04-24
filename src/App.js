@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useRouteMatch, useHistory, useLocation } from 'react-router-dom';
 import { Global } from '@emotion/react';
 
-import { EXCHANGES, SORT_TYPES } from '~lib/constants';
+import { EXCHANGES } from '~lib/constants';
 import { sortExchanges } from '~lib/utils';
 import { selectPair, setPair } from '~store/pair';
 import { resetPrices, selectOrder, selectExchanges, setOrder } from '~store/exchanges';

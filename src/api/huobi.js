@@ -3,7 +3,7 @@ import axios from 'axios';
 import { formatLower } from '~lib/utils';
 
 export async function getTicker(symbol, signal) {
-  return new Promise(async (resolve, reject) => {
+  return new Promise(async resolve => {
     const formattedSymbol = formatLower(symbol);
     try {
       const {
@@ -14,10 +14,10 @@ export async function getTicker(symbol, signal) {
           symbol: formattedSymbol,
         },
       });
-      const response = tick && tick?.data.length > 0 ? tick.data[0]?.price : null;
-      resolve(response);
+      const price = tick.data[0].price;
+      resolve({ price, error: null });
     } catch {
-      reject(null);
+      resolve({ price: null, error: 'Could not retrieve data' });
     }
   });
 }

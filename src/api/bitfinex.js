@@ -3,18 +3,21 @@ import axios from 'axios';
 import { formatUpper, mapValuesFromBitfinex } from '~lib/utils';
 
 export async function getTicker(symbol, signal) {
-  return new Promise(async (resolve, reject) => {
+  return new Promise(async resolve => {
     const formattedSymbol = formatUpper(symbol);
     try {
       const { data } = await axios.get(`/v2/ticker/t${formattedSymbol}`, { signal });
       if (Array.isArray(data) && typeof data[0] === 'number') {
+        if (data[0] === 'error') {
+          resolve({ price: null, error: 'Could not retrieve data' });
+          return;
+        }
+
         const response = mapValuesFromBitfinex(data);
-        resolve(response?.ask || null);
-        return;
+        resolve({ price: response?.ask, error: null });
       }
-      resolve(null);
     } catch {
-      reject(null);
+      resolve({ price: null, error: 'Could not retrieve data' });
     }
   });
 }

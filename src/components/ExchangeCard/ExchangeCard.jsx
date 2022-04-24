@@ -17,30 +17,29 @@ function ExchangeCard(props) {
   const exchangeData = useSelector(selectExchangeData(exchange));
   const [isEnabled, setEnabled] = useState(true);
 
-  const {
-    data: price,
-    refetch,
-    isError,
-  } = useQuery(`api/getTicker/${exchange}`, ({ signal }) => api[exchange].getTicker(pair, signal), {
-    enabled: isEnabled,
-    refetchInterval: API_REFETCH_INTERVAL,
-  });
+  const { data: response, refetch } = useQuery(
+    `api/getTicker/${exchange}`,
+    ({ signal }) => api[exchange].getTicker(pair, signal),
+    {
+      enabled: isEnabled,
+      refetchInterval: API_REFETCH_INTERVAL,
+    },
+  );
 
   useEffect(() => {
-    if (pair && pair.length > 0) {
+    const hasPair = pair && pair.length > 0;
+    if (hasPair) {
+      setEnabled(hasPair);
       refetch();
-    } else {
-      setEnabled(false);
     }
   }, [pair]);
 
   useEffect(() => {
-    setEnabled(!isError);
-  }, [isError]);
-
-  useEffect(() => {
-    dispatch(setPrice({ exchange, price }));
-  }, [price]);
+    if (response) {
+      dispatch(setPrice({ exchange, price: response.price }));
+      setEnabled(Boolean(!response.error));
+    }
+  }, [response]);
 
   function getDestinationLink() {
     // Preventing user from opening modal of an exchange that has no data

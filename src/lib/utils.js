@@ -1,4 +1,3 @@
-import React from 'react';
 import { SORT_TYPES } from '~lib/constants';
 
 // We only really need the Ask price, but mapping everything just in case

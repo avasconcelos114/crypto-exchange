@@ -3,7 +3,7 @@ import axios from 'axios';
 import { formatUpper, mapValuesFromKraken } from '~lib/utils';
 
 export async function getTicker(pair, signal) {
-  return new Promise(async (resolve, reject) => {
+  return new Promise(async resolve => {
     const formattedPair = formatUpper(pair);
     try {
       const {
@@ -16,10 +16,10 @@ export async function getTicker(pair, signal) {
       });
       for (const key of Object.keys(result)) {
         const pairData = mapValuesFromKraken(result[key]);
-        resolve(pairData?.ask || null);
+        resolve({ price: pairData.ask, error: null });
       }
     } catch {
-      reject(null);
+      resolve({ price: null, error: 'Could not retrieve data' });
     }
   });
 }
