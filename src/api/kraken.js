@@ -2,13 +2,14 @@ import axios from 'axios';
 
 import { formatUpper, mapValuesFromKraken } from '~lib/utils';
 
-export async function getTicker(pair) {
+export async function getTicker(pair, signal) {
   return new Promise(async (resolve, reject) => {
     const formattedPair = formatUpper(pair);
     try {
       const {
         data: { result = {} },
       } = await axios.get('/0/public/Ticker', {
+        signal,
         params: {
           pair: formattedPair,
         },

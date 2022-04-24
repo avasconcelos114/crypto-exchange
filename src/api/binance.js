@@ -2,13 +2,14 @@ import axios from 'axios';
 
 import { formatUpper } from '~lib/utils';
 
-export async function getTicker(symbol) {
+export async function getTicker(symbol, signal) {
   return new Promise(async (resolve, reject) => {
     const formattedSymbol = formatUpper(symbol);
     try {
       const {
         data: { price },
       } = await axios.get('/api/v3/ticker/price', {
+        signal,
         params: {
           symbol: formattedSymbol,
         },

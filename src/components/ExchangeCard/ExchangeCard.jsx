@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
@@ -15,20 +15,28 @@ function ExchangeCard(props) {
   const dispatch = useDispatch();
   const pair = useSelector(selectPair);
   const exchangeData = useSelector(selectExchangeData(exchange));
-  const { data: price, refetch } = useQuery(
-    `api/getTicker/${exchange}`,
-    () => api[exchange].getTicker(pair),
-    {
-      enabled: Boolean(pair && pair.length > 0),
-      refetchInterval: API_REFETCH_INTERVAL,
-    },
-  );
+  const [isEnabled, setEnabled] = useState(true);
+
+  const {
+    data: price,
+    refetch,
+    isError,
+  } = useQuery(`api/getTicker/${exchange}`, ({ signal }) => api[exchange].getTicker(pair, signal), {
+    enabled: isEnabled,
+    refetchInterval: API_REFETCH_INTERVAL,
+  });
 
   useEffect(() => {
-    if (pair) {
+    if (pair && pair.length > 0) {
       refetch();
+    } else {
+      setEnabled(false);
     }
   }, [pair]);
+
+  useEffect(() => {
+    setEnabled(!isError);
+  }, [isError]);
 
   useEffect(() => {
     dispatch(setPrice({ exchange, price }));

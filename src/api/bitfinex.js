@@ -2,11 +2,11 @@ import axios from 'axios';
 
 import { formatUpper, mapValuesFromBitfinex } from '~lib/utils';
 
-export async function getTicker(symbol) {
+export async function getTicker(symbol, signal) {
   return new Promise(async (resolve, reject) => {
     const formattedSymbol = formatUpper(symbol);
     try {
-      const { data } = await axios.get(`/v2/ticker/t${formattedSymbol}`);
+      const { data } = await axios.get(`/v2/ticker/t${formattedSymbol}`, { signal });
       if (Array.isArray(data) && typeof data[0] === 'number') {
         const response = mapValuesFromBitfinex(data);
         resolve(response?.ask || null);
