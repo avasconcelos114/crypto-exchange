@@ -84,12 +84,10 @@ function App() {
       return <Empty />;
     }
 
-    const cardMap = {
-      [EXCHANGES.BINANCE]: <ExchangeCard exchange={EXCHANGES.BINANCE} />,
-      [EXCHANGES.BITFINEX]: <ExchangeCard exchange={EXCHANGES.BITFINEX} />,
-      [EXCHANGES.HUOBI]: <ExchangeCard exchange={EXCHANGES.HUOBI} />,
-      [EXCHANGES.KRAKEN]: <ExchangeCard exchange={EXCHANGES.KRAKEN} />,
-    };
+    const cardMap = {};
+    for (const exchange of Object.keys(EXCHANGES)) {
+      cardMap[exchange] = <ExchangeCard exchange={EXCHANGES[exchange]} />;
+    }
 
     if (order === SORT_TYPES.ALPHABETIC) {
       const sorted = Object.keys(cardMap)
