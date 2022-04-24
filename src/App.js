@@ -4,6 +4,7 @@ import { useRouteMatch, useHistory, useLocation } from 'react-router-dom';
 import { Global } from '@emotion/react';
 
 import { EXCHANGES, SORT_TYPES } from '~lib/constants';
+import { sortExchanges } from '~lib/utils';
 import { selectPair, setPair } from '~store/pair';
 import { resetPrices, selectOrder, selectExchanges, setOrder } from '~store/exchanges';
 import { openModal, selectIsOpen } from '~store/modal';
@@ -21,7 +22,7 @@ function App() {
   const dispatch = useDispatch();
   const pair = useSelector(selectPair);
   const order = useSelector(selectOrder);
-  const exchanges = useSelector(selectExchanges);
+  const exchangeData = useSelector(selectExchanges);
   const isModalOpen = useSelector(selectIsOpen);
 
   const [searchValue, setSearchValue] = useState('');
@@ -85,34 +86,11 @@ function App() {
     }
 
     const cardMap = {};
-    for (const exchange of Object.keys(EXCHANGES)) {
-      cardMap[exchange] = <ExchangeCard exchange={EXCHANGES[exchange]} />;
+    for (const key of Object.keys(EXCHANGES)) {
+      cardMap[EXCHANGES[key]] = <ExchangeCard exchange={EXCHANGES[key]} />;
     }
 
-    if (order === SORT_TYPES.ALPHABETIC) {
-      const sorted = Object.keys(cardMap)
-        .sort((a, b) => a < b)
-        .map(key => cardMap[key]);
-      return sorted;
-    }
-
-    if (order === SORT_TYPES.PRICE) {
-      const sorted = Object.keys(exchanges)
-        .sort((a, b) => {
-          if (exchanges[a]?.price === null) {
-            return 1;
-          }
-          if (exchanges[b]?.price === null) {
-            return -1;
-          }
-
-          const exchangeA = parseFloat(exchanges[a]?.price || -1);
-          const exchangeB = parseFloat(exchanges[b]?.price || -1);
-          return exchangeB - exchangeA;
-        })
-        .map(key => cardMap[key]);
-      return sorted;
-    }
+    return React.Children.toArray(sortExchanges({ sortType: order, exchangeData, cardMap }));
   }
 
   return (
