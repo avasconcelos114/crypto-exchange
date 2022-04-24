@@ -3,11 +3,21 @@ import axios from 'axios';
 import { formatUpper } from '~lib/utils';
 
 export async function getTicker(symbol) {
-  const formattedSymbol = formatUpper(symbol);
-  return axios.get('/api/v3/ticker/price', {
-    params: {
-      symbol: formattedSymbol,
-    },
+  return new Promise(async (resolve, reject) => {
+    const formattedSymbol = formatUpper(symbol);
+    try {
+      const {
+        data: { price },
+      } = await axios.get('/api/v3/ticker/price', {
+        params: {
+          symbol: formattedSymbol,
+        },
+      });
+      const response = price && price.length > 0 ? parseFloat(price) : null;
+      resolve(response);
+    } catch {
+      reject(null);
+    }
   });
 }
 

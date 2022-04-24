@@ -3,11 +3,21 @@ import axios from 'axios';
 import { formatLower } from '~lib/utils';
 
 export async function getTicker(symbol) {
-  const formattedSymbol = formatLower(symbol);
-  return axios.get('/market/trade', {
-    params: {
-      symbol: formattedSymbol,
-    },
+  return new Promise(async (resolve, reject) => {
+    const formattedSymbol = formatLower(symbol);
+    try {
+      const {
+        data: { tick },
+      } = await axios.get('/market/trade', {
+        params: {
+          symbol: formattedSymbol,
+        },
+      });
+      const response = tick && tick?.data.length > 0 ? tick.data[0]?.price : null;
+      resolve(response);
+    } catch {
+      reject(null);
+    }
   });
 }
 

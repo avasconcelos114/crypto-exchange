@@ -15,7 +15,7 @@ function Input(props) {
     <input
       ref={inputRef}
       type={type}
-      value={value}
+      value={value || ''}
       css={styles.baseStyle}
       onChange={onChange}
       onKeyUp={handleKeyUp}
