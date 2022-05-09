@@ -2,12 +2,23 @@ import axios from 'axios';
 
 import { formatLower } from '~lib/utils';
 
-export async function getTicker(symbol) {
-  const formattedSymbol = formatLower(symbol);
-  return axios.get('/market/trade', {
-    params: {
-      symbol: formattedSymbol,
-    },
+export async function getTicker(symbol, signal) {
+  return new Promise(async resolve => {
+    const formattedSymbol = formatLower(symbol);
+    try {
+      const {
+        data: { tick },
+      } = await axios.get('/market/trade', {
+        signal,
+        params: {
+          symbol: formattedSymbol,
+        },
+      });
+      const price = tick.data[0].price;
+      resolve({ price, error: null });
+    } catch {
+      resolve({ price: null, error: 'Could not retrieve data' });
+    }
   });
 }
 

@@ -1,3 +1,5 @@
+import { SORT_TYPES } from '~lib/constants';
+
 // We only really need the Ask price, but mapping everything just in case
 // Typescript would have made this somewhat more intuitive
 export function mapValuesFromKraken(values) {
@@ -63,4 +65,29 @@ export function formatUpper(symbol) {
 
 export function formatLower(symbol) {
   return symbol.replace('/', '').toLowerCase();
+}
+
+export function sortExchanges({ sortType, exchangeData, cardMap }) {
+  if (sortType === SORT_TYPES.ALPHABETIC) {
+    return Object.keys(cardMap)
+      .sort((a, b) => a < b)
+      .map(key => cardMap[key]);
+  }
+
+  if (sortType === SORT_TYPES.PRICE) {
+    const sorted = Object.keys(exchangeData)
+      .sort((a, b) => {
+        if (exchangeData[a]?.price === null) {
+          return 1;
+        }
+        if (exchangeData[b]?.price === null) {
+          return -1;
+        }
+        const exchangeA = parseFloat(exchangeData[a]?.price || -1);
+        const exchangeB = parseFloat(exchangeData[b]?.price || -1);
+        return exchangeB - exchangeA;
+      })
+      .map(key => cardMap[key]);
+    return sorted;
+  }
 }
